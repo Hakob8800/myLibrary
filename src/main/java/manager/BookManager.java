@@ -2,7 +2,6 @@ package manager;
 
 
 import db.ConnectionProvider;
-import model.Author;
 import model.Book;
 
 import java.sql.*;
@@ -15,13 +14,15 @@ public class BookManager {
     private final AuthorManager AUTHOR_MANAGER = new AuthorManager();
 
     public void save(Book book) {
-        String sql = "INSERT INTO book(title,description,price,author_id) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO book(title,description,price,author_id,image_path,user_id) VALUES(?,?,?,?,?,?)";
 
         try (PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, book.getTitle());
             ps.setString(2, book.getDescription());
             ps.setInt(3, book.getPrice());
             ps.setInt(4, book.getAuthor().getId());
+            ps.setString(5,book.getImagePath());
+            ps.setInt(6,book.getUserId());
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -42,6 +43,18 @@ public class BookManager {
             e.printStackTrace();
         }
         return null;
+    }
+    public List<Book> getByUserId(int userId) {
+        List<Book> bookList = new ArrayList<>();
+        try (Statement statement = CONNECTION.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("Select * from book where user_id = " + userId);
+            while (resultSet.next()) {
+                bookList.add(getBookFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return bookList;
     }
 
     public List<Book> getAll() {
@@ -91,7 +104,7 @@ public class BookManager {
 
     }
 
-    public List<Book> searchByTitle(String strForSearch) {
+    public List<Book> searchByKeyword(String strForSearch) {
         List<Book> bookList = new ArrayList<>();
         String query = "select * from book where title like CONCAT( '%',?,'%')";
         try (PreparedStatement ps = CONNECTION.prepareStatement(query)) {
@@ -113,7 +126,9 @@ public class BookManager {
         book.setTitle(resultSet.getString("title"));
         book.setDescription(resultSet.getString("description"));
         book.setPrice(resultSet.getInt("price"));
+        book.setImagePath(resultSet.getString("image_path"));
         book.setAuthor(AUTHOR_MANAGER.getById(resultSet.getInt("author_id")));
+        book.setUserId(resultSet.getInt("user_id"));
         return book;
     }
 }

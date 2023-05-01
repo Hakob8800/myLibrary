@@ -12,16 +12,17 @@
 <h2>
     Create Book
 </h2>
-<form action="/createBook" method="post">
+<form action="/createBook" method="post" enctype="multipart/form-data">
 
     title:<input type="text" name="title"><br>
-    Description:<input type="text" name="description"><br>
+    description:<input type="text" name="description"><br>
     price:<input type="text" name="price"><br>
-    <select name="author">
+    author: <select name="author">
         <%for (Author author : authors) { %>
         <option value="<%=author.getId()%>"> <%=author.getName() %> <%=author.getSurname()%> </option>
         <% } %>
     </select><br>
+    cover img: <input type="file" name="coverPic"><br>
     <input type="submit" value="create">
 </form><br>
 <a href="/books">Back</a>

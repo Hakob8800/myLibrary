@@ -2,6 +2,8 @@ package servlet;
 
 import manager.BookManager;
 import model.Book;
+import model.User;
+import model.UserType;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,7 +19,19 @@ public class BooksServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Book> books = bookManager.getAll();
+        List<Book> books = null;
+        User user = (User) req.getSession().getAttribute("user");
+
+        String keyword = req.getParameter("keyword");
+        if (keyword == null || keyword.equals("")) {
+            if (user.getUserType() == UserType.USER) {
+                books = bookManager.getByUserId(user.getId());
+            } else {
+                books = bookManager.getAll();
+            }
+        } else {
+            books = bookManager.searchByKeyword(keyword);
+        }
         req.setAttribute("books", books);
         req.getRequestDispatcher("WEB-INF/books.jsp").forward(req, resp);
     }

@@ -5,6 +5,7 @@ import db.ConnectionProvider;
 import model.Author;
 import model.Book;
 import model.User;
+import model.UserType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class UserManager {
             ps.setString(2, user.getSurname());
             ps.setString(3, user.getEmail());
             ps.setString(4, user.getPassword());
+            ps.setString(5, String.valueOf(user.getUserType()));
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -70,6 +72,7 @@ public class UserManager {
         user.setSurname(resultSet.getString("surname"));
         user.setEmail(resultSet.getString("email"));
         user.setPassword(resultSet.getString("password"));
+        user.setUserType(UserType.valueOf(resultSet.getString("user_type")));
         return user;
     }
 }

@@ -1,11 +1,17 @@
 <%@ page import="model.Author" %>
 <%@ page import="java.util.List" %>
+<%@ page import="model.User" %>
+<%@ page import="model.UserType" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Authors</title>
 </head>
-<% List<Author> authors = (List<Author>) request.getAttribute("authors"); %>
+<%
+  List<Author> authors = (List<Author>) request.getAttribute("authors");
+  User user = (User)session.getAttribute("user");
+%>
+
 <body>
 <h2>Authors</h2>
 <a href="/createAuthor">Create Author</a>
@@ -16,7 +22,9 @@
     <th>Surname</th>
     <th>Email</th>
     <th>Age</th>
+    <%if(user.getUserType()== UserType.ADMIN) {%>
     <th>Action</th>
+    <%}%>
   </tr>
   <% if(authors!=null) { %>
   <% for (Author author : authors) { %>
@@ -27,9 +35,11 @@
     <td> <%= author.getSurname() %> </td>
     <td> <%= author.getEmail() %> </td>
     <td> <%= author.getAge() %> </td>
+    <%if(user.getUserType()== UserType.ADMIN) {%>
     <td> <a href="/deleteAuthor?id=<%=author.getId()%>">Delete</a>/
       <a href="/updateAuthor?id=<%=author.getId()%>">Update</a>
     </td>
+    <%}%>
   </tr>
 
   <% } %>
