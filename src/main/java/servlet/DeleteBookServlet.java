@@ -2,6 +2,7 @@ package servlet;
 
 import manager.BookManager;
 import model.Book;
+import model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
