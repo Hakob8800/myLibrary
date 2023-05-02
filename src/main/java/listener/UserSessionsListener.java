@@ -6,7 +6,7 @@ import javax.servlet.http.HttpSessionListener;
 import java.util.Date;
 
 @WebListener
-public class MySessionListener implements HttpSessionListener {
+public class UserSessionsListener implements HttpSessionListener {
     @Override
     public void sessionCreated(HttpSessionEvent se) {
         System.out.println("session created at:" + new Date() + " id:" + se.getSession().getId());
