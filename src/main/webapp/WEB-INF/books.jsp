@@ -51,7 +51,7 @@
 <br>
 
 <form action="/books" method="get">
-    <input type="text" value="Keyword" name="keyword">
+    <input type="text" placeholder="keyword" name="keyword">
     <input type="submit" value="search">
 </form>
 <br><br>

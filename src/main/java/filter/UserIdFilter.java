@@ -28,10 +28,10 @@ public class UserIdFilter extends HttpFilter {
         int bookId = Integer.parseInt(req.getParameter("id"));
         Book book = BOOK_MANAGER.getById(bookId);
         User user = (User) session.getAttribute("user");
-        if (user.getId() != book.getUserId()&&user.getUserType()!= UserType.ADMIN) {
+        if (user.getId() != book.getUser().getId() && user.getUserType() != UserType.ADMIN) {
             response.sendRedirect("/");
         } else {
-            chain.doFilter(request,response);
+            chain.doFilter(request, response);
         }
     }
 }

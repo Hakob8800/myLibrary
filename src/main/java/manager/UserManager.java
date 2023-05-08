@@ -13,13 +13,13 @@ import java.util.List;
 
 public class UserManager {
 
-    private final Connection CONNECTION = ConnectionProvider.getInstance().getConnection();
-    private final AuthorManager AUTHOR_MANAGER = new AuthorManager();
+    private final Connection connection = ConnectionProvider.getInstance().getConnection();
+    private final AuthorManager authorManager = new AuthorManager();
 
     public void save(User user) {
-        String sql = "INSERT INTO user(name,surname,email,password) VALUES(?,?,?,?)";
+        String sql = "INSERT INTO user(name,surname,email,password,user_type) VALUES(?,?,?,?,?)";
 
-        try (PreparedStatement ps = CONNECTION.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getSurname());
             ps.setString(3, user.getEmail());
@@ -37,7 +37,7 @@ public class UserManager {
 
     public User getByEmailAndPassword(String email, String password) {
         String sql = "SELECT * FROM user WHERE email =? AND password =?";
-        try (PreparedStatement ps = CONNECTION.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             ps.setString(2, password);
             ResultSet resultSet = ps.executeQuery();
@@ -53,9 +53,21 @@ public class UserManager {
 
     public User getByEmail(String email) {
         String sql = "Select * from user where email =?";
-        try (PreparedStatement ps = CONNECTION.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, email);
             ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return getUserFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User getById(int user_id) {
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("Select * from user where id = " + user_id);
             if (resultSet.next()) {
                 return getUserFromResultSet(resultSet);
             }
@@ -75,4 +87,6 @@ public class UserManager {
         user.setUserType(UserType.valueOf(resultSet.getString("user_type")));
         return user;
     }
+
+
 }

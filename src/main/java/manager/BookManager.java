@@ -11,7 +11,8 @@ import java.util.List;
 public class BookManager {
 
     private final Connection CONNECTION = ConnectionProvider.getInstance().getConnection();
-    private final AuthorManager AUTHOR_MANAGER = new AuthorManager();
+    private final AuthorManager authorManager = new AuthorManager();
+    private final UserManager userManager = new UserManager();
 
     public void save(Book book) {
         String sql = "INSERT INTO book(title,description,price,author_id,image_path,user_id) VALUES(?,?,?,?,?,?)";
@@ -22,7 +23,7 @@ public class BookManager {
             ps.setInt(3, book.getPrice());
             ps.setInt(4, book.getAuthor().getId());
             ps.setString(5,book.getImagePath());
-            ps.setInt(6,book.getUserId());
+            ps.setInt(6,book.getUser().getId());
             ps.executeUpdate();
             ResultSet generatedKeys = ps.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -127,8 +128,8 @@ public class BookManager {
         book.setDescription(resultSet.getString("description"));
         book.setPrice(resultSet.getInt("price"));
         book.setImagePath(resultSet.getString("image_path"));
-        book.setAuthor(AUTHOR_MANAGER.getById(resultSet.getInt("author_id")));
-        book.setUserId(resultSet.getInt("user_id"));
+        book.setAuthor(authorManager.getById(resultSet.getInt("author_id")));
+        book.setUser(userManager.getById(resultSet.getInt("user_id")));
         return book;
     }
 }

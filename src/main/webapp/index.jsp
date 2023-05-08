@@ -2,8 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" href="css/style.css">
     <title>login MyLibrary</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
 </head>
 <% String msg = (String) request.getSession().getAttribute("msg");%>
 <body>
@@ -12,22 +15,27 @@
         response.sendRedirect("/home");
     }
 %>
-<h3>
-    Login
-</h3>
+
 <% if (msg != null) {%>
     <span style="color: firebrick"><%=msg%></span>
 <%}%>
 <%request.getSession().removeAttribute("msg");%>
-<form action="/login" method="post">
-    <div class="inp">
-        email: <input type="text" name="email"><br><br>
-        password: <input type="password" name="password"><br><br>
-        <input type="submit" value="login">
-    </div>
+<div class="main-block">
+    <h1>Login</h1>
+    <form action="/login" method="post">
+        <hr>
+        <label id="icon" for="email"><i class="fas fa-envelope"></i></label>
+        <input type="text" name="email" id="email" placeholder="Email" required/>
 
-</form>
-<br/>
-<a href="/register.jsp">Register</a><br>
+        <label id="icon" for="password"><i class="fas fa-unlock-alt"></i></label>
+        <input type="password" name="password" id="password" placeholder="Password" required/>
+        <hr>
+        <div class="btn-block">
+            <button type="submit">Login</button>
+            <a href="/register"><button type="button">Register</button></a>
+        </div>
+    </form>
+</div>
+
 </body>
 </html>

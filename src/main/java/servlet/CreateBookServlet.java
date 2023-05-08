@@ -2,6 +2,7 @@ package servlet;
 
 import manager.AuthorManager;
 import manager.BookManager;
+import manager.UserManager;
 import model.Author;
 import model.Book;
 import model.User;
@@ -50,7 +51,7 @@ public class CreateBookServlet extends HttpServlet {
         book.setPrice(Integer.parseInt(req.getParameter("price")));
         book.setImagePath(imgName);
         book.setAuthor(authorManager.getById(Integer.parseInt(req.getParameter("author"))));
-        book.setUserId(user.getId());
+        book.setUser(user);
         bookManager.save(book);
         resp.sendRedirect("/books");
     }
